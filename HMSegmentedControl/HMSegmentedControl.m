@@ -987,6 +987,7 @@ NSUInteger HMSegmentedControlNoSegment = (NSUInteger)-1;
 }
 
 - (void)setSelectedSegmentIndex:(NSUInteger)index animated:(BOOL)animated notify:(BOOL)notify {
+    if(self.segmentWidthsArray.count - 1 < index) return; // 防止 越界
     _selectedSegmentIndex = index;
     [self setNeedsDisplay];
     

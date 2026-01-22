@@ -247,6 +247,8 @@ typedef NS_ENUM(NSInteger, HMSegmentedControlImagePosition) {
  Default is UIEdgeInsetsMake(0, 5, 0, 5)
  */
 @property (nonatomic, readwrite) UIEdgeInsets segmentEdgeInset;
+@property (nonatomic, readwrite) UIEdgeInsets boxEdgeInset;
+@property (nonatomic, readwrite) BOOL setCornerBox;
 
 @property (nonatomic, readwrite) UIEdgeInsets enlargeEdgeInset;
 

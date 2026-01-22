@@ -154,6 +154,7 @@ NSUInteger HMSegmentedControlNoSegment = (NSUInteger)-1;
 
     self.selectedSegmentIndex = 0;
     self.segmentEdgeInset = UIEdgeInsetsMake(0, 5, 0, 5);
+    self.boxEdgeInset = UIEdgeInsetsMake(0, 0, 0, 0);
     self.selectionIndicatorHeight = 5.0f;
     self.selectionIndicatorEdgeInsets = UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 0.0f);
     self.selectionStyle = HMSegmentedControlSelectionStyleTextWidthStripe;
@@ -613,6 +614,9 @@ NSUInteger HMSegmentedControlNoSegment = (NSUInteger)-1;
                 
                 if (self.selectionStyle == HMSegmentedControlSelectionStyleBox && !self.selectionIndicatorBoxLayer.superlayer) {
                     self.selectionIndicatorBoxLayer.frame = [self frameForFillerSelectionIndicator];
+                    if (self.setCornerBox) {
+                        self.selectionIndicatorBoxLayer.cornerRadius = CGRectGetHeight(self.selectionIndicatorBoxLayer.frame) / 2.0;
+                    }
                     [self.scrollView.layer insertSublayer:self.selectionIndicatorBoxLayer atIndex:0];
                 }
             }
@@ -772,7 +776,7 @@ NSUInteger HMSegmentedControlNoSegment = (NSUInteger)-1;
             i++;
         }
         
-        return CGRectMake(selectedSegmentOffset, 0, [[self.segmentWidthsArray objectAtIndex:self.selectedSegmentIndex] floatValue], CGRectGetHeight(self.frame));
+        return CGRectMake(selectedSegmentOffset, self.boxEdgeInset.top, [[self.segmentWidthsArray objectAtIndex:self.selectedSegmentIndex] floatValue], CGRectGetHeight(self.frame) - (self.boxEdgeInset.top + self.boxEdgeInset.bottom));
     }
     return CGRectMake(self.segmentWidth * self.selectedSegmentIndex, 0, self.segmentWidth, CGRectGetHeight(self.frame));
 }

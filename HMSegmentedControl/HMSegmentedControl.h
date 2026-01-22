@@ -257,6 +257,8 @@ typedef NS_ENUM(NSInteger, HMSegmentedControlImagePosition) {
  */
 @property (nonatomic) BOOL shouldAnimateUserSelection;
 
+@property (nonatomic, strong) UIView *rightView;
+
 - (instancetype)initWithSectionTitles:(NSArray<NSString *> *)sectiontitles;
 - (instancetype)initWithSectionImages:(NSArray<UIImage *> *)sectionImages sectionSelectedImages:(NSArray<UIImage *> *)sectionSelectedImages;
 - (instancetype)initWithSectionImages:(NSArray<UIImage *> *)sectionImages sectionSelectedImages:(NSArray<UIImage *> *)sectionSelectedImages titlesForSections:(NSArray<NSString *> *)sectiontitles;

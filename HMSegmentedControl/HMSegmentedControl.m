@@ -117,17 +117,17 @@ NSUInteger HMSegmentedControlNoSegment = (NSUInteger)-1;
 }
 
 - (instancetype)initWithSectionImages:(NSArray<UIImage *> *)sectionImages sectionSelectedImages:(NSArray<UIImage *> *)sectionSelectedImages titlesForSections:(NSArray<NSString *> *)sectiontitles {
-	self = [super initWithFrame:CGRectZero];
+    self = [super initWithFrame:CGRectZero];
     if (self) {
         [self commonInit];
-		
-		if (sectionImages.count != sectiontitles.count) {
-			[NSException raise:NSRangeException format:@"***%s: Images bounds (%ld) Don't match Title bounds (%ld)", sel_getName(_cmd), (unsigned long)sectionImages.count, (unsigned long)sectiontitles.count];
+        
+        if (sectionImages.count != sectiontitles.count) {
+            [NSException raise:NSRangeException format:@"***%s: Images bounds (%ld) Don't match Title bounds (%ld)", sel_getName(_cmd), (unsigned long)sectionImages.count, (unsigned long)sectiontitles.count];
         }
-		
+        
         self.sectionImages = sectionImages;
         self.sectionSelectedImages = sectionSelectedImages;
-		self.sectionTitles = sectiontitles;
+        self.sectionTitles = sectiontitles;
         self.type = HMSegmentedControlTypeTextImages;
     }
     return self;
@@ -208,11 +208,11 @@ NSUInteger HMSegmentedControlNoSegment = (NSUInteger)-1;
 }
 
 - (void)setSelectionIndicatorLocation:(HMSegmentedControlSelectionIndicatorLocation)selectionIndicatorLocation {
-	_selectionIndicatorLocation = selectionIndicatorLocation;
-	
-	if (selectionIndicatorLocation == HMSegmentedControlSelectionIndicatorLocationNone) {
-		self.selectionIndicatorHeight = 0.0f;
-	}
+    _selectionIndicatorLocation = selectionIndicatorLocation;
+    
+    if (selectionIndicatorLocation == HMSegmentedControlSelectionIndicatorLocationNone) {
+        self.selectionIndicatorHeight = 0.0f;
+    }
 }
 
 - (void)setSelectionIndicatorBoxOpacity:(CGFloat)selectionIndicatorBoxOpacity {
@@ -466,11 +466,11 @@ NSUInteger HMSegmentedControlNoSegment = (NSUInteger)-1;
         }];
     } else if (self.type == HMSegmentedControlTypeTextImages){
         [self removeTitleBackgroundLayers];
-		[self.sectionImages enumerateObjectsUsingBlock:^(id iconImage, NSUInteger idx, BOOL *stop) {
+        [self.sectionImages enumerateObjectsUsingBlock:^(id iconImage, NSUInteger idx, BOOL *stop) {
             UIImage *icon = iconImage;
             CGFloat imageWidth = icon.size.width;
             CGFloat imageHeight = icon.size.height;
-			
+            
             CGSize stringSize = [self measureTitleAtIndex:idx];
             CGFloat stringHeight = stringSize.height;
             CGFloat stringWidth = stringSize.width;
@@ -555,7 +555,7 @@ NSUInteger HMSegmentedControlNoSegment = (NSUInteger)-1;
             }
             CALayer *imageLayer = [CALayer layer];
             imageLayer.frame = imageRect;
-			
+            
             if (self.selectedSegmentIndex == idx) {
                 if (self.sectionSelectedImages) {
                     UIImage *highlightIcon = [self.sectionSelectedImages objectAtIndex:idx];
@@ -568,7 +568,7 @@ NSUInteger HMSegmentedControlNoSegment = (NSUInteger)-1;
             }
             
             [self.scrollView.layer addSublayer:imageLayer];
-			titleLayer.contentsScale = [[UIScreen mainScreen] scale];
+            titleLayer.contentsScale = [[UIScreen mainScreen] scale];
             [self.scrollView.layer addSublayer:titleLayer];
             
             if ([self.accessibilityElements count]<=idx) {
@@ -595,10 +595,10 @@ NSUInteger HMSegmentedControlNoSegment = (NSUInteger)-1;
                 else
                     element.accessibilityTraits = UIAccessibilityTraitButton;
             }
-			
+            
             [self addBackgroundAndBorderLayerWithRect:imageRect];
         }];
-	}
+    }
     
     // Add the selection indicators
     if (self.selectedSegmentIndex != HMSegmentedControlNoSegment) {
@@ -718,11 +718,11 @@ NSUInteger HMSegmentedControlNoSegment = (NSUInteger)-1;
         CGFloat imageWidth = sectionImage.size.width;
         sectionWidth = imageWidth;
     } else if (self.type == HMSegmentedControlTypeTextImages) {
-		CGFloat stringWidth = [self measureTitleAtIndex:self.selectedSegmentIndex].width;
-		UIImage *sectionImage = [self.sectionImages objectAtIndex:self.selectedSegmentIndex];
-		CGFloat imageWidth = sectionImage.size.width;
+        CGFloat stringWidth = [self measureTitleAtIndex:self.selectedSegmentIndex].width;
+        UIImage *sectionImage = [self.sectionImages objectAtIndex:self.selectedSegmentIndex];
+        CGFloat imageWidth = sectionImage.size.width;
         sectionWidth = MAX(stringWidth, imageWidth);
-	}
+    }
     
     if (self.selectionStyle == HMSegmentedControlSelectionStyleArrow) {
         CGFloat widthToEndOfSelectedSegment = (self.segmentWidth * self.selectedSegmentIndex) + self.segmentWidth;
@@ -780,10 +780,26 @@ NSUInteger HMSegmentedControlNoSegment = (NSUInteger)-1;
     }
     return CGRectMake(self.segmentWidth * self.selectedSegmentIndex, 0, self.segmentWidth, CGRectGetHeight(self.frame));
 }
-
+- (void)setRightView:(UIView *)rightView {
+    if (_rightView) {
+        [_rightView removeFromSuperview];
+    }
+    _rightView = rightView;
+    if (rightView) {
+        [self addSubview:rightView];
+    }
+    [self updateSegmentsRects];
+}
 - (void)updateSegmentsRects {
+    CGFloat rightViewWidth = CGRectGetWidth(_rightView.frame);
+    CGFloat rightViewHeight = CGRectGetHeight(_rightView.frame);
+    CGFloat viewWidth = CGRectGetWidth(self.frame);
+    CGFloat viewHeight = CGRectGetHeight(self.frame);
+    if (_rightView) {
+        _rightView.frame = CGRectMake(viewWidth - rightViewWidth - 10, (viewHeight - rightViewHeight)/2.0, rightViewWidth, rightViewHeight);
+    }
     self.scrollView.contentInset = UIEdgeInsetsZero;
-    self.scrollView.frame = CGRectMake(0, 0, CGRectGetWidth(self.frame), CGRectGetHeight(self.frame));
+    self.scrollView.frame = CGRectMake(0, 0, viewWidth - (rightViewWidth > 0 ? rightViewWidth + 10 : 0), viewHeight);
     
     if ([self sectionCount] > 0) {
         self.segmentWidth = self.frame.size.width / [self sectionCount];

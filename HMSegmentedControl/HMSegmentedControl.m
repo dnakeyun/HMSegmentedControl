@@ -819,7 +819,7 @@ NSUInteger HMSegmentedControlNoSegment = (NSUInteger)-1;
             totalWidth += stringWidth;
             [mutableSegmentWidths addObject:[NSNumber numberWithFloat:stringWidth]];
         }];
-
+        self.isSlideable = true;
         if (self.shouldStretchSegmentsToScreenSize && totalWidth < self.bounds.size.width) {
             CGFloat whitespace = self.bounds.size.width - totalWidth;
             CGFloat whitespaceForSegment = whitespace / [mutableSegmentWidths count];
@@ -827,6 +827,7 @@ NSUInteger HMSegmentedControlNoSegment = (NSUInteger)-1;
                 CGFloat extendedWidth = whitespaceForSegment + [obj floatValue];
                 [mutableSegmentWidths replaceObjectAtIndex:idx withObject:[NSNumber numberWithFloat:extendedWidth]];
             }];
+            self.isSlideable = false;
         }
 
         self.segmentWidthsArray = [mutableSegmentWidths copy];
